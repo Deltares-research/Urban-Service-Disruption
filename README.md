@@ -25,6 +25,34 @@ category.
 
 The notebooks follow a network-based, origin-to-service workflow:
 
+```mermaid
+flowchart LR
+    H["Population hexagons<br/>(origins)"] --> S["Prepare and connect<br/>network points"]
+    P["Critical services<br/>(destinations)"] --> S
+    R["Road graph +<br/>study boundary"] --> S
+    S --> M{"Travel mode"}
+    M -->|"Driving: one-way + speed"| G["Travel-time network"]
+    M -->|"Walking: undirected + 5 km/h"| G
+    G --> D["Shortest paths to<br/>nearest reachable service"]
+    D --> A["Accessibility by origin<br/>and service category"]
+    D --> E["Assign scaled population<br/>demand to route edges"]
+    E --> I["Edge demand, route count,<br/>demand × travel time"]
+    I --> Q["Rank road segments<br/>for prioritization"]
+```
+
+### Baseline and flood scenarios
+
+```mermaid
+flowchart TB
+    N["Prepared road network"] --> B["Baseline routing"]
+    N --> F["Flood exposure filter<br/>threshold: 0.2 m"]
+    F -->|"Keep roads and services<br/>below threshold or with missing depth"| H["Hazard routing"]
+    B --> C["Recalculate accessibility<br/>and road demand"]
+    H --> C
+    C --> O["Compare baseline vs hazard<br/>by mode and service category"]
+    W["Walking hazard analysis"] -. "reuses flood-filtered inputs" .-> H
+```
+
 1. **Prepare the study area and demand origins.** Load the road graph, study
    boundary, population hex grid, and critical-infrastructure points. Keep
    hexagons with population greater than 0.5 as origins, and process
