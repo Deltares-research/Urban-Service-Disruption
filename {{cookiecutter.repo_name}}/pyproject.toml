@@ -1,0 +1,102 @@
+[project]
+name = "{{cookiecutter.repo_name}}"
+dynamic = ["version"]
+authors = [
+    { name = "{{ cookiecutter.maintainer_name }}", email = "{{ cookiecutter.maintainer_email }}" },
+]
+description = "{{cookiecutter.project_short_description}}"
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Operating System :: OS Independent",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Information Technology",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+
+dependencies = ["coloredlogs~=15.0.1"]
+
+[project.optional-dependencies]
+dev = [
+    "setuptools ~= 69.0.3",
+    "wheel ~= 0.40.0",
+    "setuptools-git-versioning < 2",
+    "black~=22.1.0",
+    "flake8==6.0.0",
+    "Flake8-pyproject==1.2.3",
+    "pytest ~=7.3.1",
+    "pytest-cov ~=4.0.0",
+    "bump2version==1.0.1",
+    "mypy ~= 1.5.1",
+    "isort==5.13.2",
+    "build ~= 1.0.3",
+]
+
+[project.urls]
+homepage = "https://www.deltares.nl/en/software-and-data/products/wanda-software"
+documentation = "https://readthedocs.org"
+repository = "https://github.com/Deltares-research/{{cookiecutter.repo_name}}"
+changelog = "https://github.com/Deltares-research/{{cookiecutter.repo_name}}/blob/main/CHANGELOG.md"
+
+[project.scripts]
+{{cookiecutter.python_import_name}} = "{{cookiecutter.python_import_name}}:main"
+
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [
+    "setuptools ~= 69.0.3",
+    "wheel ~= 0.40.0",
+    "setuptools-git-versioning<2",
+]
+
+[tool.setuptools-git-versioning]
+enabled = true
+version_file = "VERSION"
+count_commits_from_version_file = true
+dev_template = "{tag}.dev{ccount}"
+dirty_template = "{tag}.dev{ccount}"
+
+[tool.pytest.ini_options]
+addopts = "--cov={{cookiecutter.python_import_name}} --cov-report html --cov-report term-missing --cov-fail-under 80"
+testpaths = ["unit_test"]
+
+[tool.coverage.run]
+source = ["src"]
+
+[tool.flake8]
+exclude = ['.venv/*', 'venv/*', 'doc/*']
+ignore = [
+    'Q000', # Remove bad quotes
+    'D401', # Docstring First line should be imperative
+    'E203', # Space before colon (not PEP-8 compliant, and conflicts with black)
+    'C408', # Suggestion to use dict() over {}
+    'W503', # Starting lines with operators.
+]
+per-file-ignores = ['__init__.py:F401', 'test_main.py:D100,D101,D102,D103']
+max-line-length = 100
+count = true
+
+[tool.black]
+line-length = 100
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+exclude = ['.venv/*', 'venv/*', 'doc/*', 'ci/*']
+
+# mypy per-module options:
+[[tool.mypy.overrides]]
+module = ["unit_test.*", "coloredlogs.*"]
+check_untyped_defs = true
+ignore_missing_imports = true

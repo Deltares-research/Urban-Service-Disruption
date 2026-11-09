@@ -1,0 +1,15 @@
+{
+  "maintainer_name": "Audrey Roy Greenfeld",
+  "maintainer_email": "audrey@deltares.nl",
+  "project_name": "Wanda python module",
+  "repo_name": "{{ cookiecutter.project_name|lower|replace(' ', '-') }}",
+  "python_import_name": "{{ cookiecutter.repo_name|replace('-', '') }}",
+  "project_short_description": "A description on what this application within the WANDA entails.",
+  "publish_container": false,
+  "docker_username": "audrey",
+  "container_name": "wanda-application",
+  "python_version": "3.11",
+  "_copy_without_render": [
+    ".vscode/**"
+  ]
+}

@@ -1,0 +1,64 @@
+name: Run template checks
+on: [push]
+
+jobs:
+
+  build-lint-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8, 3.10, 3.11]
+
+    name: Test cookiecutter template
+    steps:
+      - name: Check out source repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up Python environment
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run cookiecutter
+        run: |
+          pip install cookiecutter
+          cookiecutter $GITHUB_SERVER_URL/$GITHUB_REPOSITORY -c $GITHUB_SHA
+          cd design_toolkit_application
+
+      - name: flake8 Lint
+        uses: TrueBrain/actions-flake8@v2
+        with:
+          plugins: Flake8-pyproject==1.2.3 flake8-docstrings==1.7.0 flake8-quotes==3.3.2 flake8-bugbear==23.9.16 flake8-mock==0.4 flake8-tuple==0.4.1
+    
+      - name: Run unit tests
+        run: |
+          ./ci/linux/test_unit.sh
+
+      - name: Surface failing tests
+        if: always()
+        uses: pmeier/pytest-results-action@main
+        with:
+          # A list of JUnit XML files, directories containing the former, and wildcard
+          # patterns to process.
+          # See @actions/glob for supported patterns.
+          path: test-results.xml
+
+          # Add a summary of the results at the top of the report
+          # Default: true
+          summary: true
+
+          # Select which results should be included in the report.
+          # Follows the same syntax as
+          # `pytest -r`
+          # Default: fEX
+          display-options: fEX
+
+          # Fail the workflow if no JUnit XML was found.
+          # Default: true
+          fail-on-empty: true
+      - name: Add mypy annotator
+        uses: pr-annotators/mypy-pr-annotator@v1.0.0
+
+      - name: run typechecker
+        run: |
+          ./ci/linux/typecheck.sh
