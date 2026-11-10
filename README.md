@@ -38,6 +38,19 @@ flowchart LR
     D --> E["Assign scaled population<br/>demand to route edges"]
     E --> I["Edge demand, route count,<br/>demand × travel time"]
     I --> Q["Rank road segments<br/>for prioritization"]
+
+    classDef input fill:#dbeafe,stroke:#2563eb,color:#172554,stroke-width:2px
+    classDef prep fill:#ccfbf1,stroke:#0f766e,color:#134e4a,stroke-width:2px
+    classDef mode fill:#fef3c7,stroke:#d97706,color:#78350f,stroke-width:2px
+    classDef route fill:#dcfce7,stroke:#16a34a,color:#14532d,stroke-width:2px
+    classDef metric fill:#ede9fe,stroke:#7c3aed,color:#3b0764,stroke-width:2px
+    classDef priority fill:#ffe4e6,stroke:#e11d48,color:#881337,stroke-width:2px
+    class H,P,R input
+    class S prep
+    class M mode
+    class G,D route
+    class A,E,I metric
+    class Q priority
 ```
 
 ### Baseline and flood scenarios
@@ -51,6 +64,17 @@ flowchart TB
     H --> C
     C --> O["Compare baseline vs hazard<br/>by mode and service category"]
     W["Walking hazard analysis"] -. "reuses flood-filtered inputs" .-> H
+
+    classDef network fill:#dbeafe,stroke:#2563eb,color:#172554,stroke-width:2px
+    classDef baseline fill:#dcfce7,stroke:#16a34a,color:#14532d,stroke-width:2px
+    classDef filter fill:#ffedd5,stroke:#ea580c,color:#7c2d12,stroke-width:2px
+    classDef hazard fill:#ffe4e6,stroke:#e11d48,color:#881337,stroke-width:2px
+    classDef result fill:#ede9fe,stroke:#7c3aed,color:#3b0764,stroke-width:2px
+    class N network
+    class B baseline
+    class F filter
+    class H,W hazard
+    class C,O result
 ```
 
 1. **Prepare the study area and demand origins.** Load the road graph, study
@@ -84,6 +108,32 @@ flowchart TB
    demand-times-travel-time indicators. These rankings help identify
    flood-exposed roads carrying high modeled demand; they are indicators for
    further equity analysis, not a standalone equity measure.
+
+## Results
+
+The notebooks produce spatial outputs that can be mapped and compared across
+travel modes and scenarios. They report:
+
+- **Accessibility by population hexagon:** travel time and network distance to
+  the nearest reachable critical service, plus the identifier of the connected
+  service. Origins with no route are recorded as unreachable.
+- **Road-level demand:** modeled demand assigned to each shortest-path edge,
+  the number of origin routes using that edge, and demand multiplied by travel
+  time. Road-segment rankings are also produced for these indicators.
+- **Service-category outputs:** accessibility and road-demand metrics are
+  calculated by category as well as across all services.
+- **Scenario comparisons:** baseline and flood-filtered outputs let analysts
+  identify changes in reachable services, travel times, distances, and
+  high-demand road segments for driving and walking.
+
+Typical output layers include `b_hexgrid_Critical_Infra_accessibility.gpkg`
+and `hazard_hexgrid_Critical_Infra_accessibility.gpkg` for hexagon
+accessibility, and `b_Vulnerability_ranked.geojson` and
+`hazard_Vulnerability_ranked.geojson` for ranked road segments. The walking
+and category-specific notebooks write corresponding layers with `walk_`,
+`walk_hazard_`, or `cat_` prefixes. Output locations are set in the notebooks;
+these generated layers are not included in this repository, so this
+documentation does not claim numerical results.
 
 ### Interpretation and limitations
 
