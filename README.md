@@ -1,5 +1,12 @@
 # Accessibility and road-disruption analyses
 
+Even when floods are not life-threatening, they can disrupt how an urban area functions. A relatively minor flood can,
+- Disrupt access to essential services
+- Interrupt everyday urban activities
+- Trigger cascading impacts across urban areas
+
+
+
 <img width="1332" height="749" alt="image" src="https://github.com/user-attachments/assets/6ad8bf7f-ea74-4f4c-a77f-238ad1646895" />
 
 
