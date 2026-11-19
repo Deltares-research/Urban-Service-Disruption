@@ -1,5 +1,8 @@
 # Accessibility and road-disruption analyses
 
+<img width="1332" height="749" alt="image" src="https://github.com/user-attachments/assets/6ad8bf7f-ea74-4f4c-a77f-238ad1646895" />
+
+
 This folder contains exploratory analyses of how disruption to the road network
 can affect access to critical services and how demand is distributed across
 roads. The work uses the [Deltares RA2CE repository](https://github.com/Deltares/ra2ce)
